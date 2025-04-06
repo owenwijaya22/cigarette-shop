@@ -22,6 +22,7 @@ export async function sendOrderNotification(orderDetails: {
     items: { name: string; quantity: number; price: number }[];
     customerEmail: string;
     customerName?: string;
+    customerPhone?: string;
 }) {
     // Make sure we have email credentials
     if (!GMAIL_USER || !GMAIL_PASS) {
@@ -46,6 +47,7 @@ export async function sendOrderNotification(orderDetails: {
       <h1>New Cigarette Order</h1>
       <p><strong>Order ID:</strong> ${orderDetails.id}</p>
       <p><strong>Customer:</strong> ${orderDetails.customerName || "N/A"}</p>
+      <p><strong>Phone:</strong> ${orderDetails.customerPhone || "N/A"}</p>
       <p><strong>Email:</strong> ${orderDetails.customerEmail}</p>
       <h2>Items:</h2>
       <p>${itemsList}</p>
@@ -61,4 +63,20 @@ export async function sendOrderNotification(orderDetails: {
         console.error("Error sending email:", error);
         throw error;
     }
+}
+
+/**
+ * Test function to verify email functionality
+ */
+export async function testEmailNotification() {
+    return await sendOrderNotification({
+        id: "TEST-ORDER-123",
+        total: 45.99,
+        items: [
+            { name: "Marlboro Red", quantity: 2, price: 15.99 },
+            { name: "Double Happiness", quantity: 1, price: 14.01 },
+        ],
+        customerEmail: "test@example.com",
+        customerName: "Test Customer",
+    });
 }
