@@ -2,11 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 export default function CheckoutSuccessPage() {
-  const router = useRouter();
-
   return (
     <div className="max-w-2xl mx-auto text-center py-16">
       <div className="mb-8 flex justify-center">
