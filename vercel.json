@@ -1,10 +1,4 @@
 {
-    "builds": [
-        {
-            "src": "package.json",
-            "use": "@vercel/next"
-        }
-    ],
     "functions": {
         "api/**/*": {
             "memory": 1024
