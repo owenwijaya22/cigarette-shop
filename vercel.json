@@ -1,6 +1,6 @@
 {
     "functions": {
-        "api/**/*": {
+        "src/app/api/**/*": {
             "memory": 1024
         }
     },
