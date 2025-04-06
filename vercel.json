@@ -1,9 +1,4 @@
 {
-    "functions": {
-        "src/app/api/**/*": {
-            "memory": 1024
-        }
-    },
     "buildCommand": "npm run prisma:generate && next build",
     "installCommand": "npm install"
 }
