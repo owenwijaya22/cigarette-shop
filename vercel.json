@@ -1,4 +1,0 @@
-{
-    "buildCommand": "npm run prisma:generate && npx prisma migrate deploy && npx prisma db push && npm run prisma:seed && next build",
-    "installCommand": "npm install"
-}

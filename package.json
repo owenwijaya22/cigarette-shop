@@ -4,17 +4,19 @@
     "private": true,
     "scripts": {
         "dev": "next dev --turbopack",
-        "build": "prisma generate && next build",
+        "build": "next build",
         "start": "next start",
         "lint": "next lint",
+        "postinstall": "prisma generate",
         "prisma:seed": "ts-node prisma/seed.ts",
-        "prisma:generate": "prisma generate"
+        "prisma:migrate": "prisma migrate deploy"
     },
     "dependencies": {
         "@prisma/client": "^6.5.0",
         "bcrypt": "^5.1.1",
         "next": "15.2.4",
         "nodemailer": "^6.10.0",
+        "pg": "^8.14.1",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "uuid": "^11.1.0"
