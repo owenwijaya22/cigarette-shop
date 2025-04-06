@@ -1,8 +1,6 @@
 import React from 'react';
-import Link from "next/link";
-import Image from "next/image";
-import prisma from "@/lib/prisma";
-import ProductCard from "@/components/ProductCard";
+import prisma from '@/lib/prisma';
+import ProductCard from '@/components/ProductCard';
 
 async function getProducts() {
   try {
@@ -17,12 +15,12 @@ async function getProducts() {
     });
     return products;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error('Error fetching products:', error);
     return [];
   }
 }
 
-export default async function Home() {
+export default async function ProductsPage() {
   const products = await getProducts();
 
   return (
@@ -43,14 +41,8 @@ export default async function Home() {
       ) : (
         <div className="bg-gray-100 rounded-lg p-8 text-center">
           <p className="text-gray-600 mb-4">No products available yet.</p>
-          <Link
-            href="/admin"
-            className="inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded"
-          >
-            Add Products
-          </Link>
         </div>
       )}
     </div>
   );
-}
+} 
