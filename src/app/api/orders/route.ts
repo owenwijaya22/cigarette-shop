@@ -4,20 +4,16 @@ import { sendOrderNotification } from "@/lib/email";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         const orders = await prisma.order.findMany({
+            orderBy: {
+                createdAt: "desc",
+            },
             include: {
                 orderItems: {
                     include: {
                         product: true,
-                    },
-                },
-                user: {
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true,
                     },
                 },
             },
@@ -27,7 +23,7 @@ export async function GET() {
     } catch (error) {
         console.error("Error fetching orders:", error);
         return NextResponse.json(
-            { error: "Failed to fetch orders" },
+            { message: "Failed to fetch orders" },
             { status: 500 }
         );
     }
@@ -115,17 +111,16 @@ export async function POST(request: NextRequest) {
                     "status", 
                     "createdAt", 
                     "updatedAt"
-                )
-                VALUES (
-                    ${orderId}, 
-                    ${adminUser.id}, 
-                    ${customerName}, 
-                    ${customerPhone}, 
-                    ${customerCountry}, 
-                    ${total}, 
-                    'PENDING', 
-                    ${now}, 
-                    ${now}
+                ) VALUES (
+                    ${orderId}::uuid,
+                    ${adminUser.id}::uuid,
+                    ${customerName}::text,
+                    ${customerPhone}::text,
+                    ${customerCountry}::text,
+                    ${total}::decimal,
+                    'PENDING'::"OrderStatus",
+                    NOW(),
+                    NOW()
                 )
             `;
 
@@ -151,12 +146,68 @@ export async function POST(request: NextRequest) {
                 });
             }
 
-            // Fetch the complete order with items
-            return await tx.order.findUnique({
+            // Fetch the complete order with items and product details
+            const order = await tx.order.findUnique({
                 where: { id: orderId },
-                include: { orderItems: true },
+                include: {
+                    orderItems: {
+                        include: {
+                            product: true,
+                        },
+                    },
+                },
             });
+
+            // Create necessary analytics data
+            if (order) {
+                // Create order analytics
+                await tx.orderAnalytics.create({
+                    data: {
+                        orderId: order.id,
+                        country: order.customerCountry,
+                        orderDate: order.createdAt,
+                        totalAmount: order.total,
+                        productCount: order.orderItems.reduce(
+                            (acc, item) => acc + item.quantity,
+                            0
+                        ),
+                    },
+                });
+
+                // Create product analytics for each ordered item
+                for (const item of order.orderItems) {
+                    await tx.productAnalytics.create({
+                        data: {
+                            productId: item.productId,
+                            country: order.customerCountry,
+                            quantity: item.quantity,
+                            orderDate: order.createdAt,
+                        },
+                    });
+                }
+            }
+
+            return order;
         });
+
+        // Send email notification outside of transaction
+        if (result) {
+            const emailData = {
+                id: result.id,
+                total: result.total,
+                items: result.orderItems.map((item) => ({
+                    name: item.product.name,
+                    quantity: item.quantity,
+                    price: item.price,
+                })),
+                customerEmail: adminUser.email,
+                customerName: result.customerName,
+                customerPhone: result.customerPhone,
+            };
+
+            // Send email notification
+            await sendOrderNotification(emailData);
+        }
 
         return NextResponse.json(result, { status: 201 });
     } catch (error) {
