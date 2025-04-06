@@ -13,6 +13,7 @@
         "@prisma/client": "^6.5.0",
         "bcrypt": "^5.1.1",
         "date-fns": "^4.1.0",
+        "lucide-react": "^0.487.0",
         "next": "15.2.4",
         "nodemailer": "^6.10.0",
         "pg": "^8.14.1",
