@@ -5,13 +5,24 @@ import { formatDistanceToNow } from 'date-fns';
 import { BarChart, LineChart, PieChart } from 'lucide-react';
 
 // Types for our analytics data
+type OrderItem = {
+  id: string;
+  quantity: number;
+  price: number;
+  product: {
+    id: string;
+    name: string;
+    brand: string;
+  };
+};
+
 type Order = {
   id: string;
   customerName: string;
   customerCountry: string;
   total: number;
   createdAt: string;
-  orderItems: any[];
+  orderItems: OrderItem[];
 };
 
 type CountryData = {
@@ -39,8 +50,8 @@ export default function AnalyticsPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch all orders
-        const response = await fetch('/api/orders');
+        // Fetch all orders with order items and product details
+        const response = await fetch('/api/orders?includeItems=true');
         if (response.ok) {
           const orders = await response.json();
           
@@ -68,24 +79,23 @@ export default function AnalyticsPage() {
           });
           
           setCountryStats(Array.from(countriesMap.values())
-            .sort((a, b) => b.orders - a.orders));
+            .sort((a, b) => b.revenue - a.revenue)); // Sort by revenue instead of orders
           
-          // Process product data
+          // Process product data with proper typing
           const productsMap = new Map<string, ProductData>();
           
           orders.forEach((order: Order) => {
-            order.orderItems.forEach((item) => {
-              const product = item.product;
-              if (!productsMap.has(product.id)) {
-                productsMap.set(product.id, {
-                  id: product.id,
-                  name: product.name,
-                  brand: product.brand,
+            order.orderItems.forEach((item: OrderItem) => {
+              if (!productsMap.has(item.product.id)) {
+                productsMap.set(item.product.id, {
+                  id: item.product.id,
+                  name: item.product.name,
+                  brand: item.product.brand,
                   sales: 0
                 });
               }
               
-              const data = productsMap.get(product.id)!;
+              const data = productsMap.get(item.product.id)!;
               data.sales += item.quantity;
             });
           });
