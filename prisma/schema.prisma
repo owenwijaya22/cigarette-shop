@@ -54,6 +54,7 @@ model Order {
   customerName  String      // Adding customer name
   customerPhone String      // Adding customer phone
   customerCountry String    // Adding customer country for analytics
+  pickupDetails String?     // Adding pickup details
   total         Float
   status        OrderStatus @default(PENDING)
   createdAt     DateTime    @default(now())
