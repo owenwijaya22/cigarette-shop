@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/components/CartProvider';
@@ -17,13 +17,16 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Use useEffect to handle empty cart redirect only on initial load
+  const isInitialMount = useRef(true);
+
   useEffect(() => {
-    const isInitialLoad = true; // This will only run once on mount
-    if (items.length === 0 && isInitialLoad) {
-      router.push('/cart');
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      if (items.length === 0) {
+        router.push('/cart');
+      }
     }
-  }, []); // Empty dependency array means this only runs once on mount
+  }, [items.length, router]);
 
   // If cart is empty, return a loading state until the redirect happens
   if (items.length === 0) {
@@ -140,7 +143,7 @@ export default function CheckoutPage() {
                     className="w-full px-4 py-3 border border-neutral-600 bg-neutral-700 text-white rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   <p className="mt-1 text-sm text-neutral-500">
-                    Examples: "Behind the Golovkin statue, 10pm tonight" or "Panfilov Park bench, tomorrow at 9am"
+                    Examples: 3/F Hall 3 and call u later.
                   </p>
                 </div>
 

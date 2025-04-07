@@ -4,7 +4,7 @@ import { sendOrderNotification } from "@/lib/email";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
-export async function GET(request: Request) {
+export async function GET() {
     try {
         const orders = await prisma.order.findMany({
             orderBy: {
@@ -103,7 +103,6 @@ export async function POST(request: NextRequest) {
         const result = await prisma.$transaction(async (tx) => {
             // Generate a new UUID for the order
             const orderId = uuidv4();
-            const now = new Date().toISOString();
 
             // Create the order
             await tx.$executeRaw`
