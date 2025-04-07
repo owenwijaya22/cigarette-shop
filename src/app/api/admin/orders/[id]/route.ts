@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function PATCH(
-    request: NextRequest,
-    { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const orderId = params.id;
+        // Await the params promise
+        const { id: orderId } = await params;
         const { status } = await request.json();
 
         // Validate status
@@ -24,7 +22,7 @@ export async function PATCH(
             );
         }
 
-        // Check if order exists
+        // Check if the order exists
         const order = await prisma.order.findUnique({
             where: { id: orderId },
         });

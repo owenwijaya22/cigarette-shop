@@ -1,16 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-interface Params {
-    params: {
-        id: string;
-    };
-}
 
 // Get a specific product
-export async function GET(request: Request, { params }: Params) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } =  await params;
 
         const product = await prisma.product.findUnique({
             where: { id },
@@ -35,9 +30,9 @@ export async function GET(request: Request, { params }: Params) {
 }
 
 // Update a product
-export async function PATCH(request: Request, { params }: Params) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } =  await params;
         const data = await request.json();
 
         const product = await prisma.product.update({
@@ -63,9 +58,9 @@ export async function PATCH(request: Request, { params }: Params) {
 }
 
 // Delete a product
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         // Delete the product (this will cascade to inventory due to our model definition)
         await prisma.product.delete({

@@ -1,15 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 
-interface Params {
-    params: {
-        id: string;
-    };
-}
-
-export async function GET(request: Request, { params }: Params) {
+export async function GET(request: NextRequest, { params } : { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const order = await prisma.order.findUnique({
             where: { id },
@@ -47,9 +41,9 @@ export async function GET(request: Request, { params }: Params) {
 }
 
 // Update order status
-export async function PATCH(request: Request, { params }: Params) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
         const data = await request.json();
 
         const order = await prisma.order.update({

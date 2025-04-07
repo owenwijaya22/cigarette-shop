@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const isInStock = product.inventory && product.inventory.quantity > 0;
+  const isInStock = !!(product.inventory && product.inventory.quantity > 0);
 
   return (
     <div>
@@ -84,7 +84,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   }`}
                 >
                   {isInStock
-                    ? `In Stock (${product.inventory.quantity} available)`
+                    ? `In Stock (${product.inventory?.quantity ?? 0} available)`
                     : 'Out of Stock'}
                 </span>
               </div>

@@ -210,9 +210,9 @@ export async function POST(request: NextRequest) {
                 customerEmail: adminUser.email,
                 customerName: result.customerName,
                 customerPhone: result.customerPhone,
-                pickupDetails: result.pickupDetails,
+                pickupDetails: result.pickupDetails ?? undefined, // Convert null to undefined
             };
-
+            
             // Send email notification
             await sendOrderNotification(emailData);
         }

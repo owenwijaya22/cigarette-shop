@@ -1,16 +1,10 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-interface Params {
-    params: {
-        id: string;
-    };
-}
-
 // Get inventory for a specific product
-export async function GET(request: Request, { params }: Params) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const inventory = await prisma.inventory.findUnique({
             where: { productId: id },
@@ -35,9 +29,9 @@ export async function GET(request: Request, { params }: Params) {
 }
 
 // Update inventory for a specific product
-export async function PATCH(request: Request, { params }: Params) {
+export async function PATCH(request: Request, { params } : { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
         const data = await request.json();
 
         // Check if product exists
