@@ -70,12 +70,10 @@ export default function AdminProductsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newProduct)
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         setProducts(prev => [...prev, data]);
-        
-        // Reset form
         setNewProduct({
           name: '',
           brand: '',
@@ -84,13 +82,12 @@ export default function AdminProductsPage() {
           imageUrl: '',
           initialStock: 100
         });
-        
         setMessage({ text: 'Product added successfully!', type: 'success' });
       } else {
         const error = await response.json();
         setMessage({ text: error.message || 'Failed to add product', type: 'error' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ text: 'An error occurred', type: 'error' });
     }
   };
@@ -102,7 +99,7 @@ export default function AdminProductsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, quantity })
       });
-
+  
       if (response.ok) {
         const updatedInventory = await response.json();
         setProducts(prev => 
@@ -117,7 +114,7 @@ export default function AdminProductsPage() {
         const error = await response.json();
         setMessage({ text: error.message || 'Failed to update inventory', type: 'error' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ text: 'An error occurred', type: 'error' });
     }
   };
