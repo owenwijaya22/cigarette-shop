@@ -11,24 +11,26 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    country: 'Kazakhstan'
+    country: 'Pakistan',
+    pickupDetails: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Use useEffect to handle empty cart redirect
+  // Use useEffect to handle empty cart redirect only on initial load
   useEffect(() => {
-    if (items.length === 0) {
+    const isInitialLoad = true; // This will only run once on mount
+    if (items.length === 0 && isInitialLoad) {
       router.push('/cart');
     }
-  }, [items, router]);
+  }, []); // Empty dependency array means this only runs once on mount
 
   // If cart is empty, return a loading state until the redirect happens
   if (items.length === 0) {
     return <div className="text-center py-12 text-white">Redirecting to cart...</div>;
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -47,6 +49,7 @@ export default function CheckoutPage() {
           customerName: formData.name,
           customerPhone: formData.phone,
           customerCountry: formData.country,
+          pickupDetails: formData.pickupDetails,
           items: items.map(item => ({
             productId: item.id,
             quantity: item.quantity,
@@ -63,9 +66,9 @@ export default function CheckoutPage() {
       
       // Clear the cart after successful order
       clearCart();
-
-      // Redirect to success page
-      router.push('/checkout/success');
+      
+      // Use replace instead of push to prevent back navigation to checkout
+      router.replace('/checkout/success');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during checkout');
       setIsSubmitting(false);
@@ -106,7 +109,7 @@ export default function CheckoutPage() {
 
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-neutral-300 mb-1">
-                    Phone Number
+                    Phone Number <span className="text-neutral-500">(optional)</span>
                   </label>
                   <input
                     type="tel"
@@ -114,10 +117,31 @@ export default function CheckoutPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    required
-                    placeholder="Enter your phone number"
+                    placeholder="Enter your phone number (optional)"
                     className="w-full px-4 py-3 border border-neutral-600 bg-neutral-700 text-white rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                   />
+                  <p className="mt-1 text-sm text-neutral-500">
+                    Optional, but helpful if we need to contact you about your order
+                  </p>
+                </div>
+
+                <div>
+                  <label htmlFor="pickupDetails" className="block text-sm font-medium text-neutral-300 mb-1">
+                    Pickup Details
+                  </label>
+                  <textarea
+                    id="pickupDetails"
+                    name="pickupDetails"
+                    value={formData.pickupDetails}
+                    onChange={handleChange}
+                    required
+                    placeholder="Specify where and when you want to pick up your cigarettes"
+                    rows={3}
+                    className="w-full px-4 py-3 border border-neutral-600 bg-neutral-700 text-white rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <p className="mt-1 text-sm text-neutral-500">
+                    Examples: "Behind the Golovkin statue, 10pm tonight" or "Panfilov Park bench, tomorrow at 9am"
+                  </p>
                 </div>
 
                 <div>
@@ -131,17 +155,18 @@ export default function CheckoutPage() {
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-neutral-600 bg-neutral-700 text-white rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                   >
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Bangladesh">Bangladesh</option>
                     <option value="Kazakhstan">Kazakhstan</option>
                     <option value="Kyrgyzstan">Kyrgyzstan</option>
                     <option value="Serbia">Serbia</option>
                     <option value="Mainland China">Mainland China</option>
-                    <option value="India">India</option>
                     <option value="Indonesia">Indonesia</option>
-                    <option value="Pakistan">Pakistan</option>
+                    <option value="India">India</option>
                     <option value="Other">Other</option>
                   </select>
                   <p className="mt-1 text-sm text-neutral-500">
-                    For data collection purposes to track cigarette preferences by region
+                    Just data collection purposes to track cigarette preferences by region
                   </p>
                 </div>
 
