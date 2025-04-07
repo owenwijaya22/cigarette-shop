@@ -30,12 +30,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 <NavLink href="/" current={pathname === '/'}>
                   Home
                 </NavLink>
-                <NavLink
-                  href="/products"
-                  current={pathname.startsWith('/products')}
-                >
-                  Products
-                </NavLink>
                 {isAdmin && (
                   <NavLink
                     href="/admin"

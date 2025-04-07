@@ -33,7 +33,7 @@ export default function CheckoutSuccessPage() {
 
       <div className="space-y-4">
         <Link
-          href="/products"
+          href="/home"
           className="block w-full sm:w-auto sm:inline-block px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
           Continue Shopping
