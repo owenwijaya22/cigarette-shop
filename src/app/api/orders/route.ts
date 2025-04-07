@@ -32,16 +32,22 @@ export async function GET(request: Request) {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { customerName, customerPhone, customerCountry, items, total } =
-            body;
+        const {
+            customerName,
+            customerPhone,
+            customerCountry,
+            pickupDetails,
+            items,
+            total,
+        } = body;
 
         // Validate request data
         if (
             !customerName ||
-            !customerPhone ||
             !customerCountry ||
             !items ||
-            !total
+            !total ||
+            !pickupDetails
         ) {
             return NextResponse.json(
                 { message: "Missing required fields" },
@@ -107,6 +113,7 @@ export async function POST(request: NextRequest) {
                     "customerName", 
                     "customerPhone", 
                     "customerCountry", 
+                    "pickupDetails",
                     "total", 
                     "status", 
                     "createdAt", 
@@ -117,6 +124,7 @@ export async function POST(request: NextRequest) {
                     ${customerName}::text,
                     ${customerPhone}::text,
                     ${customerCountry}::text,
+                    ${pickupDetails || ""}::text,
                     ${total}::decimal,
                     'PENDING'::"OrderStatus",
                     NOW(),
@@ -203,6 +211,7 @@ export async function POST(request: NextRequest) {
                 customerEmail: adminUser.email,
                 customerName: result.customerName,
                 customerPhone: result.customerPhone,
+                pickupDetails: result.pickupDetails,
             };
 
             // Send email notification

@@ -24,6 +24,7 @@ type Order = {
   customerName: string;
   customerPhone: string;
   customerCountry: string;
+  pickupDetails?: string;
   total: number;
   status: OrderStatus;
   createdAt: string;
@@ -268,6 +269,15 @@ export default function AdminOrdersPage() {
                   </div>
                 </div>
               </div>
+              
+              {selectedOrder.pickupDetails && (
+                <div className="mb-6">
+                  <h3 className="text-md font-medium text-neutral-300 mb-2">Pickup Details</h3>
+                  <div className="bg-neutral-750 p-4 rounded-md">
+                    <p className="text-white">{selectedOrder.pickupDetails}</p>
+                  </div>
+                </div>
+              )}
               
               <h3 className="text-md font-medium text-neutral-300 mb-2">Order Items</h3>
               <div className="bg-neutral-750 rounded-md mb-6 overflow-hidden">
