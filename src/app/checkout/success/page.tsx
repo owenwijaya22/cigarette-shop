@@ -47,9 +47,9 @@ export default async function CheckoutSuccessPage() {
       </div>
 
       <div className="text-gray-600 mb-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">What's Next?</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">What to do next?</h2>
         <p>
-          Once your payment is verified, Owen'll will prepare your order for you depending on your pickup method.
+          Just relax and chill, Owen will prepare your order for you depending on your pickup method.
         </p>
       </div>
 
