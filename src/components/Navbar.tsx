@@ -63,33 +63,18 @@ const Navbar: React.FC<NavbarProps> = ({
                 </svg>
                 Cart
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w- powodu flex items-center justify-center text-xs">
                     {totalItems}
                   </span>
                 )}
               </Link>
-              {isLoggedIn ? (
+              {isLoggedIn && (
                 <Link
                   href="/api/auth/logout"
                   className="px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700"
                 >
                   Logout
                 </Link>
-              ) : (
-                <div className="space-x-2">
-                  <Link
-                    href="/login"
-                    className="px-4 py-2 rounded-md text-white bg-gray-800 hover:bg-gray-700"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="px-4 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                  >
-                    Register
-                  </Link>
-                </div>
               )}
             </div>
           </div>
@@ -139,4 +124,4 @@ const NavLink: React.FC<NavLinkProps> = ({ href, current, children }) => {
   );
 };
 
-export default Navbar; 
+export default Navbar;
