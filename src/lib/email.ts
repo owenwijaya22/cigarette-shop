@@ -78,21 +78,3 @@ export async function sendOrderNotification(orderDetails: {
         throw error;
     }
 }
-
-/**
- * Test function to verify email functionality
- */
-export async function testEmailNotification() {
-    return await sendOrderNotification({
-        id: "TEST-ORDER-123",
-        total: 45.99,
-        items: [
-            { name: "Marlboro Red", quantity: 2, price: 15.99 },
-            { name: "Double Happiness", quantity: 1, price: 14.01 },
-        ],
-        customerEmail: "test@example.com",
-        customerName: "Test Customer",
-        customerPhone: "+1234567890",
-        pickupDetails: "Behind Panfilov Park, 9pm tonight",
-    });
-}
