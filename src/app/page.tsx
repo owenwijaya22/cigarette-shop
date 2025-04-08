@@ -31,7 +31,7 @@ export default async function Home() {
         <div className="max-w-sm bg-gray-100 border-l-4 border-gray-300 p-2 rounded-lg shadow-sm mt-4 md:mt-0">
           <p className="text-sm text-gray-700">
             <span className="text-xl mr-2">🚬</span>
-            <strong>Fun Fact:</strong> I spelled my domain name wrong because I was too high enjoying my good cigs.
+            <strong>Fun Fact:</strong> I spelled my domain name wrong because I was too high enjoying my cigs.
           </p>
         </div>
       </div>
