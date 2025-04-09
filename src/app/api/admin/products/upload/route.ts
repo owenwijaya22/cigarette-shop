@@ -8,27 +8,29 @@ export async function POST(request: Request): Promise<NextResponse> {
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (pathname) => {
+      onBeforeGenerateToken: async (// pathname
+      ) => {
         // Here you should validate that the user is an admin
         // For now, we'll proceed without authentication
         return {
           allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-          tokenPayload: JSON.stringify({
+          // tokenPayload: JSON.stringify({
             // optional, sent to your server on upload completion
-          }),
+          // }),
         };
       },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
+      onUploadCompleted: async ({ blob }) => {
         // This won't work on localhost, but will work in production
         console.log('Product image upload completed', blob);
         
         try {
-          // You could add additional logic here, such as:
+          // Your additional logic here
           // - Updating image references in a database
           // - Processing the image
           // - Sending notifications
         } catch (error) {
-          throw new Error('Post-upload processing failed');
+          // Include the original error in your message for better debugging
+          throw new Error(`Post-upload processing failed: ${(error as Error).message}`);
         }
       },
     });
