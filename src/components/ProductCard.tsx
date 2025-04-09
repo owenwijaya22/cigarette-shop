@@ -61,13 +61,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product}) => {
           </div>
         )}
       </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-neutral-800">{name}</h3>
-        <p className="text-sm text-neutral-500">{brand}</p>
-        <p className="mt-2 text-neutral-600 text-sm line-clamp-2">
-          {description || 'No description available.'}
-        </p>
-        <div className="mt-4 flex justify-between items-center">
+      <div className="p-4 flex flex-col h-[180px]">
+        <div>
+          <h3 className="text-lg font-semibold text-neutral-800">{name}</h3>
+          <p className="text-sm text-neutral-500">{brand}</p>
+          <div className="h-[48px] overflow-hidden mt-2">
+            <p className="text-neutral-600 text-sm line-clamp-2">
+              {description || 'No description available.'}
+            </p>
+          </div>
+        </div>
+        
+        <div className="mt-auto pt-4 flex justify-between items-center">
           <span className="text-lg font-bold text-neutral-800">${price.toFixed(2)}</span>
           <div className="flex items-center gap-2">
             <span
@@ -85,7 +90,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product}) => {
               <button 
                 onClick={handleAddToCart}
                 className={`w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ${
-                  isAdded ? 'bg-green-500 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                  isAdded ? 'bg-green-500 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-indigo-500 hover:text-white'
                 } transition-colors`}
                 title="Add to cart"
               >
