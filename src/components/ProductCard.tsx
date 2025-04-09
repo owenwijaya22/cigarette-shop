@@ -14,10 +14,9 @@ interface ProductCardProps {
       quantity: number;
     } | null;
   };
-  onAddToCart?: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product}) => {
   const { id, name, brand, description, price, imageUrl, inventory } = product;
   const isInStock = inventory && inventory.quantity > 0;
 
@@ -59,20 +58,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         </div>
         <div className="mt-4 flex space-x-2">
           <Link 
-            href={`/products/${id}`}
-            className="flex-1 bg-red-600 text-white py-2 px-4 rounded text-center hover:bg-red-700 transition-colors"
+            href={`/products/${id}`} prefetch={true}
+            className="flex-1 bg-red-600 text-white py-2 px-4 rounded text-center hover:bg-red-800 active:scale-95 transition ease-in-out duration-300 fancy"
           >
             View Details
           </Link>
-          {isInStock && onAddToCart && (
-            <button
-              onClick={onAddToCart}
-              className="bg-neutral-700 text-white py-2 px-4 rounded hover:bg-neutral-800 transition-colors"
-              aria-label="Add to cart"
-            >
-              Add to Cart
-            </button>
-          )}
         </div>
       </div>
     </div>
