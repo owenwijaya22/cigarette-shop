@@ -24,7 +24,7 @@ export default async function CheckoutSuccessPage() {
           <div className="text-center">
             <div className="bg-white p-3 border rounded-lg shadow-sm mb-2">
               <Image 
-                src="/images/payme.jpeg" 
+                src="https://iva5jphtesozmkos.public.blob.vercel-storage.com/images/payme-rnvpUcG9sgtTr31m5Lfc3vWAGCndUS.jpeg" 
                 alt="Payment QR Code" 
                 width={200} 
                 height={200} 
