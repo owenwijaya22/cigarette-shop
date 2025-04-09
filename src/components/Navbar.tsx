@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from './CartProvider';
+import { ShoppingCart } from 'lucide-react';
 
 interface NavbarProps {
   isLoggedIn?: boolean;
@@ -25,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({
             <Link href="/" className="flex-shrink-0 font-bold text-xl">
               Cigarette Shop
             </Link>
-            <div className="hidden md:block ml-10">
+            <div className="ml-10">
               <div className="flex items-baseline space-x-4">
                 <NavLink href="/" current={pathname === '/'}>
                   Home
@@ -41,29 +42,16 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
           </div>
-          <div className="hidden md:block">
+          <div>
             <div className="flex items-center space-x-4">
               <Link
                 href="/cart"
                 className="relative inline-flex items-center px-4 py-2 rounded-md text-white bg-gray-800 hover:bg-gray-700"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
+                <ShoppingCart className="w-5 h-5 mr-1" />
                 Cart
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w- powodu flex items-center justify-center text-xs">
+                  <span className="absolute -top-2 -right-2 bg-indigo-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold border-2 border-neutral-800 shadow-sm">
                     {totalItems}
                   </span>
                 )}
@@ -77,25 +65,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 </Link>
               )}
             </div>
-          </div>
-          <div className="flex md:hidden">
-            {/* Mobile menu button (would be implemented with state) */}
-            <button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
-              <svg
-                className="h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       </div>
