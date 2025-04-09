@@ -84,7 +84,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product}) => {
             {isInStock && (
               <button 
                 onClick={handleAddToCart}
-                className={`w-8 h-8 flex items-center justify-center rounded-full ${
+                className={`w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ${
                   isAdded ? 'bg-green-500 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                 } transition-colors`}
                 title="Add to cart"
