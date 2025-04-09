@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { upload, type PutBlobResult } from '@vercel/blob/client';
+import { upload } from '@vercel/blob/client';
+import type { PutBlobResult } from '@vercel/blob';
 import Image from 'next/image';
 
 interface ImageUploaderProps {
@@ -9,7 +10,8 @@ interface ImageUploaderProps {
   defaultImageUrl?: string;
 }
 
-export default function ImageUploader({ onImageUploaded, defaultImageUrl }: ImageUploaderProps) {
+export default function ImageUploader({ onImageUploaded, // defaultImageUrl 
+  }: ImageUploaderProps) {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
@@ -35,7 +37,7 @@ export default function ImageUploader({ onImageUploaded, defaultImageUrl }: Imag
       console.error('Upload error:', err);
     } finally {
       setIsUploading(false);
-    }setBlob
+    }
   };
 
   return (
@@ -78,7 +80,7 @@ export default function ImageUploader({ onImageUploaded, defaultImageUrl }: Imag
           <button
             type="button"
             onClick={() => {
-              setBlob(undefined);
+              setBlob(null);
               onImageUploaded('');
               if (inputFileRef.current) inputFileRef.current.value = '';
             }}
