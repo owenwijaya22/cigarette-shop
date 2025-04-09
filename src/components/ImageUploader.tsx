@@ -12,7 +12,7 @@ interface ImageUploaderProps {
 export default function ImageUploader({ onImageUploaded, defaultImageUrl }: ImageUploaderProps) {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | undefined>(defaultImageUrl);
+  const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   
   const handleUpload = async (file: File) => {
@@ -23,19 +23,19 @@ export default function ImageUploader({ onImageUploaded, defaultImageUrl }: Imag
       // Create the path with the /image/ prefix
       const filename = `images/cigarettes/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
       
-      const blob = await upload(filename, file, {
+      const newBlob = await upload(filename, file, {
         access: 'public',
         handleUploadUrl: '/api/admin/products/upload',
       });
       
-      setImageUrl(blob.url);
-      onImageUploaded(blob.url);
+      setBlob(newBlob);
+      onImageUploaded(newBlob.url);
     } catch (err) {
       setError('Upload failed. Please try again.');
       console.error('Upload error:', err);
     } finally {
       setIsUploading(false);
-    }
+    }setBlob
   };
 
   return (
@@ -67,10 +67,10 @@ export default function ImageUploader({ onImageUploaded, defaultImageUrl }: Imag
         {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>
       
-      {imageUrl && (
+      {blob && (
         <div className="relative w-full h-40 bg-neutral-100 rounded-md overflow-hidden">
           <Image 
-            src={imageUrl} 
+            src={blob.url} 
             alt="Product image preview" 
             fill 
             style={{ objectFit: "contain" }} 
@@ -78,7 +78,7 @@ export default function ImageUploader({ onImageUploaded, defaultImageUrl }: Imag
           <button
             type="button"
             onClick={() => {
-              setImageUrl(undefined);
+              setBlob(undefined);
               onImageUploaded('');
               if (inputFileRef.current) inputFileRef.current.value = '';
             }}
