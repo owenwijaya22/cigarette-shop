@@ -7,7 +7,6 @@ async function getProducts() {
   try {
     const products = await prisma.product.findMany({
       include: { inventory: true },
-      orderBy: { name: 'asc' },
     });
     return products;
   } catch (error) {
