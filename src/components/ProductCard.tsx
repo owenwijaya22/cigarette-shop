@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/components/CartProvider';
+import { ShoppingCart, Check } from 'lucide-react';
 
 interface ProductCardProps {
   product: {
@@ -88,7 +89,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product}) => {
                 } transition-colors`}
                 title="Add to cart"
               >
-                {isAdded ? '✓' : '🛒'}
+                {isAdded ? <Check size={16} /> : <ShoppingCart size={16} />}
               </button>
             )}
           </div>
