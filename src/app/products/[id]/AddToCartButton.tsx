@@ -50,12 +50,10 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
     <div className="flex flex-col space-y-2">
       <button
         onClick={handleAddToCart}
-        className={`w-full py-3 px-4 rounded font-medium text-white ${
-          isInStock
-            ? isAdded
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-            : 'bg-gray-400 cursor-not-allowed'
+        className={`w-full py-3 px-4 rounded font-medium text-white transition-colors ${
+          !isInStock || isAdded
+            ? 'bg-green-600 hover:bg-green-700 cursor-not-allowed'
+            : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
         }`}
         disabled={!isInStock || isAdded}
       >
@@ -65,7 +63,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       {isAdded && (
         <button
           onClick={goToCart}
-          className="w-full py-3 px-4 rounded font-medium text-blue-600 border border-blue-600 hover:bg-blue-50 transition-colors"
+          className="w-full py-3 px-4 rounded font-medium text-blue-600 border border-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
         >
           View Cart
         </button>
@@ -74,4 +72,4 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   );
 };
 
-export default AddToCartButton; 
+export default AddToCartButton;
