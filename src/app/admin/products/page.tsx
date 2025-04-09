@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ImageUploader from '@/components/ImageUploader';
 
 type Product = {
   id: string;
@@ -64,11 +65,17 @@ export default function AdminProductsPage() {
     e.preventDefault();
     setMessage(null);
     
+    // Validate that we have an image URL or show a default
+    const productData = {
+      ...newProduct,
+      imageUrl: newProduct.imageUrl || "/images/default-cigarette.jpg",
+    };
+    
     try {
       const response = await fetch('/api/admin/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProduct)
+        body: JSON.stringify(productData)
       });
   
       if (response.ok) {
@@ -276,16 +283,17 @@ export default function AdminProductsPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="imageUrl" className="block text-sm font-medium text-neutral-300 mb-1">
-                    Image URL
+                  <label className="block text-sm font-medium text-neutral-300 mb-1">
+                    Product Image
                   </label>
-                  <input
-                    type="text"
-                    id="imageUrl"
-                    name="imageUrl"
-                    value={newProduct.imageUrl}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-neutral-600 bg-neutral-700 text-white rounded-md"
+                  <ImageUploader 
+                    onImageUploaded={(url) => {
+                      setNewProduct(prev => ({
+                        ...prev,
+                        imageUrl: url
+                      }));
+                    }}
+                    defaultImageUrl={newProduct.imageUrl}
                   />
                 </div>
 
@@ -320,4 +328,4 @@ export default function AdminProductsPage() {
       </div>
     </div>
   );
-} 
+}
