@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Cigarette Shop",
-  description: "Buy your favorite cigarettes online with real-time inventory tracking",
+  description: "Buy your favorite herb cigarettes and clove cigarettes online with real-time inventory tracking",
 };
 
 export default function RootLayout({
