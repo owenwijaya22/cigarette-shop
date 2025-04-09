@@ -45,11 +45,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     return (
         <div className="relative group">
-            {/* Gradient border that appears on hover */}
-            <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg opacity-0 group-hover:opacity-100 blur-sm group-hover:blur-md transition duration-300"></div>
+            {/* Purple border that appears on hover */}
+            <div className="absolute -inset-0.5 bg-indigo-600 rounded-lg opacity-0 group-hover:opacity-100 blur-sm group-hover:blur-md transition duration-300"></div>
             
-            {/* Subtle gradient border that's always visible */}
-            <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-lg"></div>
+            {/* Subtle purple border that's always visible */}
+            <div className="absolute -inset-0.5 bg-indigo-600/20 rounded-lg"></div>
 
             <Link
                 href={`/products/${id}`}
