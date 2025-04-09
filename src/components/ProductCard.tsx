@@ -21,7 +21,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product}) => {
   const isInStock = inventory && inventory.quantity > 0;
 
   return (
-    <div className="border border-neutral-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-white">
+    <Link 
+      href={`/products/${id}`} prefetch={true}
+      className="block border border-neutral-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-white cursor-pointer"
+    >
       <div className="relative h-52 w-full bg-neutral-100">
         {imageUrl ? (
           <Image
@@ -56,17 +59,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product}) => {
               : 'Out of Stock'}
           </span>
         </div>
-        <div className="mt-4 flex space-x-2">
-          <Link 
-            href={`/products/${id}`} prefetch={true}
-            className="flex-1 bg-red-600 text-white py-2 px-4 rounded text-center hover:bg-red-800 active:scale-95 transition ease-in-out duration-300 fancy"
-          >
-            View Details
-          </Link>
-        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
-export default ProductCard; 
+export default ProductCard;
