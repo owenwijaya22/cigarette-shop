@@ -4,19 +4,17 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from './CartProvider';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, User } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
 
-interface NavbarProps {
-  isLoggedIn?: boolean;
-  isAdmin?: boolean;
-}
-
-const Navbar: React.FC<NavbarProps> = ({
-  isLoggedIn = false,
-  isAdmin = false,
-}) => {
+const Navbar = () => {
   const pathname = usePathname();
   const { totalItems } = useCart();
+  const { data: session, status } = useSession();
+  
+  const isLoggedIn = !!session;
+  const isAdmin = session?.user?.isAdmin || false;
+
 
   return (
     <nav className="bg-gray-900 text-white shadow-lg">
@@ -31,6 +29,8 @@ const Navbar: React.FC<NavbarProps> = ({
                 <NavLink href="/" current={pathname === '/'}>
                   Home
                 </NavLink>
+                
+                {/* Admin link - only shows for admins */}
                 {isAdmin && (
                   <NavLink
                     href="/admin"
@@ -39,6 +39,13 @@ const Navbar: React.FC<NavbarProps> = ({
                     Admin
                   </NavLink>
                 )}
+                
+                {/* Debug element to show session state */}
+                <span className="text-xs text-gray-500">
+                  {status === 'loading' ? 'Loading...' : 
+                   status === 'authenticated' ? `Logged in (Admin: ${isAdmin ? 'Yes' : 'No'})` : 
+                   'Not logged in'}
+                </span>
               </div>
             </div>
           </div>
@@ -56,12 +63,27 @@ const Navbar: React.FC<NavbarProps> = ({
                   </span>
                 )}
               </Link>
-              {isLoggedIn && (
+              
+              {isLoggedIn ? (
+                <div className="flex items-center space-x-3">
+                  <div className="text-sm text-gray-300 flex items-center">
+                    <User className="w-4 h-4 mr-1" />
+                    {session.user.name || session.user.email}
+                    {session.user.isAdmin && " (Admin)"}
+                  </div>
+                  <button
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    className="px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
                 <Link
-                  href="/api/auth/logout"
-                  className="px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700"
+                  href="/auth/login"
+                  className="px-4 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 >
-                  Logout
+                  Login
                 </Link>
               )}
             </div>
