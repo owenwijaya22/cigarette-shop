@@ -4,17 +4,35 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from './CartProvider';
-import { ShoppingCart, User } from 'lucide-react';
+import { ShoppingCart, LogOut, LogIn, User } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
+import { SignOutButton } from '@/components/auth/Buttons';
+
+interface NavLinkProps {
+  href: string;
+  current: boolean;
+  children: React.ReactNode;
+}
+
+const NavLink: React.FC<NavLinkProps> = ({ href, current, children }) => (
+  <Link
+    href={href}
+    className={`px-3 py-2 rounded-md text-sm font-medium ${
+      current
+        ? 'bg-gray-800 text-white'
+        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+    }`}
+  >
+    {children}
+  </Link>
+);
 
 const Navbar = () => {
   const pathname = usePathname();
   const { totalItems } = useCart();
   const { data: session, status } = useSession();
   
-  const isLoggedIn = !!session;
-  const isAdmin = session?.user?.isAdmin || false;
-
+  const isAdmin = session?.user?.role === 'ADMIN';
 
   return (
     <nav className="bg-gray-900 text-white shadow-lg">
@@ -29,8 +47,6 @@ const Navbar = () => {
                 <NavLink href="/" current={pathname === '/'}>
                   Home
                 </NavLink>
-                
-                {/* Admin link - only shows for admins */}
                 {isAdmin && (
                   <NavLink
                     href="/admin"
@@ -39,13 +55,6 @@ const Navbar = () => {
                     Admin
                   </NavLink>
                 )}
-                
-                {/* Debug element to show session state */}
-                <span className="text-xs text-gray-500">
-                  {status === 'loading' ? 'Loading...' : 
-                   status === 'authenticated' ? `Logged in (Admin: ${isAdmin ? 'Yes' : 'No'})` : 
-                   'Not logged in'}
-                </span>
               </div>
             </div>
           </div>
@@ -64,25 +73,22 @@ const Navbar = () => {
                 )}
               </Link>
               
-              {isLoggedIn ? (
-                <div className="flex items-center space-x-3">
-                  <div className="text-sm text-gray-300 flex items-center">
-                    <User className="w-4 h-4 mr-1" />
-                    {session.user.name || session.user.email}
-                    {session.user.isAdmin && " (Admin)"}
-                  </div>
-                  <button
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                    className="px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <Link
-                  href="/auth/login"
-                  className="px-4 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              {isAdmin && (
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 inline-flex items-center"
                 >
+                  <LogOut className="w-4 h-4 mr-1" />
+                  Logout
+                </button>
+              )}
+              
+              {!session && status !== 'loading' && (
+                <Link
+                  href="/api/auth/signin"
+                  className="px-4 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-700 inline-flex items-center"
+                >
+                  <LogIn className="w-4 h-4 mr-1" />
                   Login
                 </Link>
               )}
@@ -91,27 +97,6 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-  );
-};
-
-interface NavLinkProps {
-  href: string;
-  current: boolean;
-  children: React.ReactNode;
-}
-
-const NavLink: React.FC<NavLinkProps> = ({ href, current, children }) => {
-  return (
-    <Link
-      href={href}
-      className={`px-3 py-2 rounded-md text-sm font-medium ${
-        current
-          ? 'bg-gray-800 text-white'
-          : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-      }`}
-    >
-      {children}
-    </Link>
   );
 };
 

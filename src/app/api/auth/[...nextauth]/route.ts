@@ -1,14 +1,19 @@
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyPassword } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import GoogleProvider from "next-auth/providers/google";
+import { compare } from "bcryptjs";
+import prisma from "@/lib/prisma";
 import type { JWT } from "next-auth/jwt";
 
 export const authOptions: NextAuthOptions = {
     providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+        }),
         CredentialsProvider({
-            name: "credentials",
+            name: "Credentials",
             credentials: {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
@@ -18,17 +23,22 @@ export const authOptions: NextAuthOptions = {
                     return null;
                 }
 
+                // For admin-only access
+                if (credentials.email !== "owenwijaya89@gmail.com") {
+                    return null;
+                }
+
                 const user = await prisma.user.findUnique({
                     where: { email: credentials.email },
                 });
 
-                if (!user) {
+                if (!user || !user.passwordHash) {
                     return null;
                 }
 
-                const isPasswordValid = await verifyPassword(
+                const isPasswordValid = await compare(
                     credentials.password,
-                    user.password
+                    user.passwordHash
                 );
 
                 if (!isPasswordValid) {
@@ -39,44 +49,34 @@ export const authOptions: NextAuthOptions = {
                     id: user.id,
                     email: user.email,
                     name: user.name,
-                    isAdmin: user.isAdmin,
+                    role: "ADMIN",
                 };
             },
         }),
     ],
     callbacks: {
-        async jwt({ token, user }: { token: JWT; user: any }) {
+        async jwt({
+            token,
+            user,
+            account,
+        }: {
+            token: JWT;
+            user: any;
+            account: any;
+        }) {
             if (user) {
                 token.id = user.id;
-                token.isAdmin = Boolean(user.isAdmin);
-                console.log("JWT callback - Adding user data to token:", {
-                    userId: user.id,
-                    isAdmin: user.isAdmin,
-                    tokenIsAdmin: token.isAdmin,
-                });
+                token.role = user.role;
             }
             return token;
         },
         async session({ session, token }: { session: any; token: JWT }) {
             if (session.user) {
-                session.user.id = token.id;
-                session.user.isAdmin = Boolean(token.isAdmin);
-                console.log(
-                    "Session callback - Setting user data in session:",
-                    {
-                        userId: token.id,
-                        isAdmin: token.isAdmin,
-                        sessionUserIsAdmin: session.user.isAdmin,
-                    }
-                );
+                session.user.id = token.id as string;
+                session.user.role = token.role as string;
             }
             return session;
         },
-    },
-    pages: {
-        signIn: "/auth/login",
-        signOut: "/auth/logout",
-        error: "/auth/error",
     },
     session: {
         strategy: "jwt" as const,
