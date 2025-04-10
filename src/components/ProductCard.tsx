@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
@@ -20,12 +20,33 @@ interface ProductCardProps {
     };
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    const { id, name, brand, description, price, imageUrl, inventory } =
-        product;
+const ProductCard: React.FC<ProductCardProps> = ({ product: initialProduct }) => {
+    const [product, setProduct] = useState(initialProduct);
+    const { id, name, brand, description, price, imageUrl, inventory } = product;
     const isInStock = inventory && inventory.quantity > 0;
     const { addItem } = useCart();
     const [isAdded, setIsAdded] = useState(false);
+    
+    // Fetch latest product data
+    useEffect(() => {
+        const fetchLatestProductData = async () => {
+            try {
+                const response = await fetch(`/api/products/${id}`);
+                if (response.ok) {
+                    const freshProduct = await response.json();
+                    setProduct(freshProduct);
+                }
+            } catch (error) {
+                console.error("Error refreshing product data:", error);
+            }
+        };
+        
+        fetchLatestProductData();
+        
+        // Optional: Set up polling to refresh data periodically
+        // const interval = setInterval(fetchLatestProductData, 30000); // every 30 seconds
+        // return () => clearInterval(interval);
+    }, [id]);
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault(); // Prevent navigation to product page

@@ -1,6 +1,3 @@
-export const revalidate = 0; // Disable caching for this route
-export const dynamic = 'force-dynamic';
-
 import React from 'react';
 import Link from "next/link";
 import prisma from "@/lib/prisma";
