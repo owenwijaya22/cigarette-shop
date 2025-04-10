@@ -88,17 +88,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             ${price.toFixed(2)}
                         </span>
                         <div className="flex items-center gap-2">
-                            <span
-                                className={`px-2 py-1 text-xs rounded-full ${
-                                    isInStock
-                                        ? "bg-green-100 text-green-800"
-                                        : "bg-red-100 text-red-800"
-                                }`}
-                            >
-                                {isInStock
-                                    ? `In Stock (${inventory.quantity})`
-                                    : "Out of Stock"}
-                            </span>
                             {isInStock && (
                                 <button
                                     onClick={handleAddToCart}
