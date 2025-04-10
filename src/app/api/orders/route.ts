@@ -62,6 +62,18 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Find the admin user
+        const adminUser = await prisma.user.findUnique({
+            where: { email: "owenwijaya89@gmail.com" },
+        });
+
+        if (!adminUser) {
+            return NextResponse.json(
+                { message: "Admin user not found" },
+                { status: 500 }
+            );
+        }
+
         // Verify inventory availability for all products
         for (const item of items) {
             const inventory = await prisma.inventory.findUnique({
