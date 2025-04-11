@@ -16,15 +16,13 @@ interface ProductCardProps {
         imageUrl?: string | null;
         tarContent?: number | null;
         nicotineContent?: number | null;
-        inventory?: {
-            quantity: number;
-        } | null;
+        quantity: number; // Update this
     };
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    const { id, name, brand, description, price, imageUrl, tarContent, nicotineContent } = product;
-    const isInStock = product.inventory && product.inventory.quantity > 0;
+    const { id, name, brand, description, price, imageUrl, tarContent, nicotineContent, quantity } = product;
+    const isInStock = quantity > 0; // Update this
     const { addItem } = useCart();
     const [isAdded, setIsAdded] = useState(false);
 
