@@ -9,7 +9,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
         const product = await prisma.product.findUnique({
             where: { id },
-            include: { inventory: true },
         });
 
         if (!product) {
@@ -43,8 +42,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
                 description: data.description,
                 price: data.price,
                 imageUrl: data.imageUrl,
+                quantity: data.quantity,
+                tarContent: data.tarContent,
+                nicotineContent: data.nicotineContent,
             },
-            include: { inventory: true },
         });
 
         return NextResponse.json(product);
