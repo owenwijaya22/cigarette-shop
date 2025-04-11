@@ -3,7 +3,7 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 async function getProducts() {
   try {
