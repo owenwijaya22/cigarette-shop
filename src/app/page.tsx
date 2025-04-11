@@ -27,9 +27,12 @@ export default async function Home() {
             Good smokes. No jokes.
           </p>
         </div>
-        <div className="inline-flex items-start bg-gray-100 border-l-4 border-gray-300 px-3 py-2 rounded-lg shadow-sm mt-4 md:mt-0">
+        <div className="flex flex-col bg-gray-100 border-l-4 border-gray-300 px-3 py-2 rounded-lg shadow-sm mt-4 md:mt-0">
           <p className="text-gray-700">
-            <strong>Incoming:</strong> Custom hand-rolled cigs and SF Express delivery.
+            <strong>Soon:</strong> Custom hand-rolled cigs & SF Express.
+          </p>
+          <p className="text-gray-700 mt-1">
+            Will find partnerships for steady supply.
           </p>
         </div>
       </div>
