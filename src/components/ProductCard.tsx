@@ -1,6 +1,10 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/components/CartProvider";
+import { ShoppingCart, Check } from "lucide-react";
 
 interface ProductCardProps {
     product: {
@@ -20,6 +24,26 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const { id, name, brand, description, price, imageUrl, tarContent, nicotineContent } = product;
+    const isInStock = product.inventory && product.inventory.quantity > 0;
+    const { addItem } = useCart();
+    const [isAdded, setIsAdded] = useState(false);
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.preventDefault(); // Prevent navigation to product page
+        if (!isInStock) return;
+
+        addItem({
+            id,
+            name,
+            brand,
+            price,
+            imageUrl,
+        });
+
+        setIsAdded(true);
+        setTimeout(() => setIsAdded(false), 1500);
+    };
+
     return (
         <div className="relative group">
             {/* Purple border that appears on hover */}
@@ -61,8 +85,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     </div>
                     <div className="mt-auto pt-2 flex flex-col gap-2">
                         {/* Cigarette details with badges - tar/nic together, price right */}
-                        <div className="flex items-center">
-                            <div className="flex gap-2">
+                        <div className="flex items-center flex-wrap">
+                            <div className="flex gap-2 mr-auto">
                                 {tarContent !== null && (
                                     <span className="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-amber-100 text-amber-800">
                                         Tar: {tarContent} mg
@@ -74,9 +98,29 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                                     </span>
                                 )}
                             </div>
-                            <span className="text-lg font-bold text-neutral-800 ml-auto">
-                                ${price}
-                            </span>
+
+                            <div className="flex items-center ml-auto">
+                                {isInStock && (
+                                <button
+                                    onClick={handleAddToCart}
+                                    className={`w-8 h-8 flex items-center justify-center rounded-full shadow mr-2 ${
+                                        isAdded 
+                                            ? "bg-green-500 text-white" 
+                                            : "bg-neutral-100 text-neutral-700 hover:bg-indigo-500 hover:text-white"
+                                    } transition-colors`}
+                                    title={isAdded ? "Added to cart" : "Add to cart"}
+                                >
+                                    {isAdded ? (
+                                        <Check size={16} />
+                                    ) : (
+                                        <ShoppingCart size={16} />
+                                    )}
+                                </button>
+                                )}
+                                <span className="text-lg font-bold text-neutral-800">
+                                    ${price}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
