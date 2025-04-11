@@ -34,7 +34,6 @@ model Product {
   tarContent  Float?
   nicotineContent Float?
   createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
   inventory   Inventory?
   orderItems  OrderItem[]
   analytics   ProductAnalytics[]
