@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,8 +21,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    const { id, name, brand, description, price, imageUrl, tarContent, nicotineContent, inventory } = product;
-    const isInStock = inventory && inventory.quantity > 0;
+    const { id, name, brand, description, price, imageUrl, tarContent, nicotineContent } = product;
     return (
         <div className="relative group">
             {/* Purple border that appears on hover */}

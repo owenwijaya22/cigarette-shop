@@ -63,11 +63,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div>
                 <h1 className="text-2xl font-bold text-white">{product.name}</h1>
                 <p className="text-neutral-400">{product.brand}</p>
-                {product.type && (
-                  <span className="inline-block px-2 py-0.5 mt-1 bg-neutral-700 text-neutral-300 text-sm rounded-full">
-                    {product.type}
-                  </span>
-                )}
               </div>
               <span className="text-2xl font-bold text-white">${product.price.toFixed(2)}</span>
             </div>
