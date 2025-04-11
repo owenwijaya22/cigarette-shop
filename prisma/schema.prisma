@@ -25,43 +25,34 @@ model User {
 }
 
 model Product {
-  id          String      @id @default(uuid())
-  name        String
-  brand       String
-  description String?
-  price       Float
-  imageUrl    String?
-  tarContent  Float?
+  id              String             @id @default(uuid())
+  name            String
+  brand           String
+  description     String?
+  price           Float
+  imageUrl        String?
+  tarContent      Float?
   nicotineContent Float?
-  createdAt   DateTime    @default(now())
-  inventory   Inventory?
-  orderItems  OrderItem[]
-  analytics   ProductAnalytics[]
-}
-
-model Inventory {
-  id        String   @id @default(uuid())
-  productId String   @unique
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  quantity        Int                @default(0)
+  createdAt       DateTime           @default(now())
+  orderItems      OrderItem[]
+  analytics       ProductAnalytics[]
 }
 
 model Order {
-  id            String      @id @default(uuid())
-  userId        String
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  customerName  String      // Adding customer name
-  customerPhone String      // Adding customer phone
-  customerCountry String    // Adding customer country for analytics
-  pickupDetails String?     // Adding pickup details
-  total         Float
-  status        OrderStatus @default(PENDING)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  orderItems    OrderItem[]
-  analytics     OrderAnalytics?
+  id              String          @id @default(uuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerName    String // Adding customer name
+  customerPhone   String // Adding customer phone
+  customerCountry String // Adding customer country for analytics
+  pickupDetails   String? // Adding pickup details
+  total           Float
+  status          OrderStatus     @default(PENDING)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  orderItems      OrderItem[]
+  analytics       OrderAnalytics?
 }
 
 model OrderItem {
@@ -87,13 +78,13 @@ model OrderAnalytics {
 }
 
 model ProductAnalytics {
-  id          String   @id @default(uuid())
-  productId   String
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  country     String
-  quantity    Int
-  orderDate   DateTime
-  createdAt   DateTime @default(now())
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  country   String
+  quantity  Int
+  orderDate DateTime
+  createdAt DateTime @default(now())
 
   @@index([country])
   @@index([productId, country])
