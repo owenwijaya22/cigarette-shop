@@ -7,9 +7,7 @@ export const dynamic = 'force-dynamic';
 
 async function getProducts() {
   try {
-    const products = await prisma.product.findMany({
-      include: { inventory: true },
-    });
+    const products = await prisma.product.findMany();
     return products;
   } catch (error) {
     console.error("Error fetching products:", error);
