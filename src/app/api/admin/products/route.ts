@@ -18,31 +18,21 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Create product in a transaction with inventory
-        const result = await prisma.$transaction(async (tx) => {
-            // Create the product
-            const product = await tx.product.create({
-                data: {
-                    name,
-                    brand,
-                    description: body.description || "",
-                    price,
-                    imageUrl: body.imageUrl || "/images/default-cigarette.jpg",
-                },
-            });
-
-            // Create initial inventory
-            const inventory = await tx.inventory.create({
-                data: {
-                    productId: product.id,
-                    quantity: initialStock || 0,
-                },
-            });
-
-            return { ...product, inventory };
+        // Create product with quantity directly
+        const product = await prisma.product.create({
+            data: {
+                name,
+                brand,
+                description: body.description || "",
+                price,
+                imageUrl: body.imageUrl || "/images/default-cigarette.jpg",
+                quantity: initialStock || 0,
+                tarContent: body.tarContent || null,
+                nicotineContent: body.nicotineContent || null,
+            },
         });
 
-        return NextResponse.json(result, { status: 201 });
+        return NextResponse.json(product, { status: 201 });
     } catch (error) {
         console.error("Error creating product:", error);
         return NextResponse.json(
