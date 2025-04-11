@@ -63,6 +63,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div>
                 <h1 className="text-2xl font-bold text-white">{product.name}</h1>
                 <p className="text-neutral-400">{product.brand}</p>
+                {product.type && (
+                  <span className="inline-block px-2 py-0.5 mt-1 bg-neutral-700 text-neutral-300 text-sm rounded-full">
+                    {product.type}
+                  </span>
+                )}
               </div>
               <span className="text-2xl font-bold text-white">${product.price.toFixed(2)}</span>
             </div>
@@ -72,6 +77,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <p className="text-neutral-300">
                 {product.description || 'No description available.'}
               </p>
+            </div>
+            
+            {/* Add cigarette details section */}
+            <div className="mt-6">
+              <h2 className="text-lg font-semibold mb-2 text-white">Cigarette Details</h2>
+              <div className="grid grid-cols-2 gap-4 bg-neutral-700 p-3 rounded-md">
+                {product.tarContent !== null && (
+                  <div>
+                    <p className="text-neutral-400 text-sm">Tar Content</p>
+                    <p className="text-white font-medium">{product.tarContent} mg</p>
+                  </div>
+                )}
+                {product.nicotineContent !== null && (
+                  <div>
+                    <p className="text-neutral-400 text-sm">Nicotine Content</p>
+                    <p className="text-white font-medium">{product.nicotineContent} mg</p>
+                  </div>
+                )}
+                {!product.tarContent && !product.nicotineContent && (
+                  <p className="text-neutral-400 col-span-2">No detailed information available</p>
+                )}
+              </div>
             </div>
 
             <div className="mt-6">
@@ -99,4 +126,4 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
     </div>
   );
-} 
+}
