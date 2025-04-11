@@ -15,9 +15,7 @@ type Product = {
   quantity: number; // Add this instead of inventory
   tarContent?: number | null;
   nicotineContent?: number | null;
-  type?: string | null;
 };
-
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -28,10 +26,10 @@ export default function AdminProductsPage() {
     description: '',
     price: 0,
     imageUrl: '',
-    initialStock: 100,
+    quantity: 0,
+    initialStock: 10,
     tarContent: null as number | null,
     nicotineContent: null as number | null,
-    type: ''
   });
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
@@ -87,16 +85,16 @@ export default function AdminProductsPage() {
         const data = await response.json();
         setProducts(prev => [...prev, data]);
         setNewProduct({
-          name: '',
-          brand: '',
-          description: '',
-          price: 0,
-          imageUrl: '',
-          initialStock: 100,
-          tarContent: null,
-          nicotineContent: null,
-          type: ''
-        });
+                  name: '',
+                  brand: '',
+                  description: '',
+                  price: 0,
+                  imageUrl: '',
+                  quantity: 0,
+                  initialStock: 10,
+                  tarContent: null,
+                  nicotineContent: null,
+                });
         setMessage({ text: 'Product added successfully!', type: 'success' });
       } else {
         const error = await response.json();
@@ -187,7 +185,6 @@ export default function AdminProductsPage() {
                         <td className="py-3">{product.name}</td>
                         <td>{product.brand}</td>
                         <td>${product.price.toFixed(2)}</td>
-                        <td>{product.type || '-'}</td>
                         <td>{product.tarContent !== null ? `${product.tarContent} mg` : '-'}</td>
                         <td>{product.nicotineContent !== null ? `${product.nicotineContent} mg` : '-'}</td>
                         <td>
@@ -329,26 +326,6 @@ export default function AdminProductsPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="type" className="block text-sm font-medium text-neutral-300 mb-1">
-                    Type
-                  </label>
-                  <select
-                    id="type"
-                    name="type"
-                    value={newProduct.type}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-neutral-600 bg-neutral-700 text-white rounded-md"
-                  >
-                    <option value="">Select Type</option>
-                    <option value="Regular">Regular</option>
-                    <option value="Light">Light</option>
-                    <option value="Menthol">Menthol</option>
-                    <option value="Herbal">Herbal</option>
-                    <option value="Clove">Clove</option>
-                  </select>
-                </div>
-
-                <div>
                   <label htmlFor="tarContent" className="block text-sm font-medium text-neutral-300 mb-1">
                     Tar Content (mg)
                   </label>
@@ -381,7 +358,6 @@ export default function AdminProductsPage() {
                     className="w-full px-3 py-2 border border-neutral-600 bg-neutral-700 text-white rounded-md"
                   />
                 </div>
-
                 <div className="pt-4">
                   <button
                     type="submit"
