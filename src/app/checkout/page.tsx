@@ -11,7 +11,7 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    country: 'Pakistan',
+    country: 'Indonesia',
     pickupDetails: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
