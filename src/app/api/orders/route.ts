@@ -76,30 +76,30 @@ export async function POST(request: NextRequest) {
 
         // Verify inventory availability for all products
         for (const item of items) {
-            const inventory = await prisma.inventory.findUnique({
-                where: { productId: item.productId },
+            const product = await prisma.product.findUnique({
+                where: { id: item.productId },
             });
 
-            if (!inventory) {
+            if (!product) {
                 return NextResponse.json(
                     {
-                        message: `Inventory not found for product ID: ${item.productId}`,
+                        message: `Product not found: ${item.productId}`,
                     },
                     { status: 400 }
                 );
             }
 
-            if (inventory.quantity < item.quantity) {
+            if (product.quantity < item.quantity) {
                 return NextResponse.json(
                     {
-                        message: `Not enough stock for product ID: ${item.productId}. Available: ${inventory.quantity}, Requested: ${item.quantity}`,
+                        message: `Not enough stock for product ID: ${item.productId}. Available: ${product.quantity}, Requested: ${item.quantity}`,
                     },
                     { status: 400 }
                 );
             }
         }
 
-        // Use a transaction to ensure both order creation and inventory update succeed or fail together
+        // Use a transaction to ensure both order creation and quantity update succeed or fail together
         const result = await prisma.$transaction(async (tx) => {
             // Generate a new UUID for the order
             const orderId = uuidv4();
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
                 )
             `;
 
-            // Create order items and update inventory
+            // Create order items and update quantity
             for (const item of items) {
                 // Create order item
                 await tx.orderItem.create({
@@ -143,12 +143,11 @@ export async function POST(request: NextRequest) {
                     },
                 });
 
-                // Update inventory by decreasing the quantity
-                await tx.inventory.update({
-                    where: { productId: item.productId },
+                // Update product quantity directly
+                await tx.product.update({
+                    where: { id: item.productId },
                     data: {
                         quantity: { decrement: item.quantity },
-                        updatedAt: new Date(),
                     },
                 });
             }
