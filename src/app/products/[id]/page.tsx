@@ -13,7 +13,6 @@ async function getProduct(id: string) {
   try {
     const product = await prisma.product.findUnique({
       where: { id },
-      include: { inventory: true },
     });
     return product;
   } catch (error) {
@@ -30,7 +29,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const isInStock = !!(product.inventory && product.inventory.quantity > 0);
+  const isInStock = product.quantity > 0;
 
   return (
     <div>
@@ -106,7 +105,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   }`}
                 >
                   {isInStock
-                    ? `In Stock (${product.inventory?.quantity ?? 0} available)`
+                    ? `In Stock (${product.quantity} available)`
                     : 'Out of Stock'}
                 </span>
               </div>
