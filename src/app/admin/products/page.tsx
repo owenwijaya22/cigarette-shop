@@ -11,6 +11,9 @@ type Product = {
   description: string;
   price: number;
   imageUrl: string;
+  tarContent?: number | null;
+  nicotineContent?: number | null;
+  type?: string | null;
 };
 
 type Inventory = {
@@ -28,7 +31,10 @@ export default function AdminProductsPage() {
     description: '',
     price: 0,
     imageUrl: '',
-    initialStock: 100
+    initialStock: 100,
+    tarContent: null as number | null,
+    nicotineContent: null as number | null,
+    type: ''
   });
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
@@ -53,11 +59,13 @@ export default function AdminProductsPage() {
     fetchProducts();
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setNewProduct(prev => ({
       ...prev,
-      [name]: name === 'price' || name === 'initialStock' ? parseFloat(value) || 0 : value
+      [name]: name === 'price' || name === 'initialStock' || name === 'tarContent' || name === 'nicotineContent' 
+        ? (value === '' ? null : parseFloat(value)) 
+        : value
     }));
   };
 
@@ -87,7 +95,10 @@ export default function AdminProductsPage() {
           description: '',
           price: 0,
           imageUrl: '',
-          initialStock: 100
+          initialStock: 100,
+          tarContent: null,
+          nicotineContent: null,
+          type: ''
         });
         setMessage({ text: 'Product added successfully!', type: 'success' });
       } else {
@@ -165,6 +176,9 @@ export default function AdminProductsPage() {
                       <th className="pb-3">Name</th>
                       <th className="pb-3">Brand</th>
                       <th className="pb-3">Price</th>
+                      <th className="pb-3">Type</th>
+                      <th className="pb-3">Tar</th>
+                      <th className="pb-3">Nicotine</th>
                       <th className="pb-3">Stock</th>
                       <th className="pb-3">Actions</th>
                     </tr>
@@ -175,6 +189,9 @@ export default function AdminProductsPage() {
                         <td className="py-3">{product.name}</td>
                         <td>{product.brand}</td>
                         <td>${product.price.toFixed(2)}</td>
+                        <td>{product.type || '-'}</td>
+                        <td>{product.tarContent !== null ? `${product.tarContent} mg` : '-'}</td>
+                        <td>{product.nicotineContent !== null ? `${product.nicotineContent} mg` : '-'}</td>
                         <td>
                           <input
                             type="number"
@@ -309,6 +326,60 @@ export default function AdminProductsPage() {
                     onChange={handleInputChange}
                     min="0"
                     required
+                    className="w-full px-3 py-2 border border-neutral-600 bg-neutral-700 text-white rounded-md"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="type" className="block text-sm font-medium text-neutral-300 mb-1">
+                    Type
+                  </label>
+                  <select
+                    id="type"
+                    name="type"
+                    value={newProduct.type}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-neutral-600 bg-neutral-700 text-white rounded-md"
+                  >
+                    <option value="">Select Type</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Light">Light</option>
+                    <option value="Menthol">Menthol</option>
+                    <option value="Herbal">Herbal</option>
+                    <option value="Clove">Clove</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="tarContent" className="block text-sm font-medium text-neutral-300 mb-1">
+                    Tar Content (mg)
+                  </label>
+                  <input
+                    type="number"
+                    id="tarContent"
+                    name="tarContent"
+                    value={newProduct.tarContent === null ? '' : newProduct.tarContent}
+                    onChange={handleInputChange}
+                    step="0.1"
+                    min="0"
+                    placeholder="Enter tar content in mg"
+                    className="w-full px-3 py-2 border border-neutral-600 bg-neutral-700 text-white rounded-md"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="nicotineContent" className="block text-sm font-medium text-neutral-300 mb-1">
+                    Nicotine Content (mg)
+                  </label>
+                  <input
+                    type="number"
+                    id="nicotineContent"
+                    name="nicotineContent"
+                    value={newProduct.nicotineContent === null ? '' : newProduct.nicotineContent}
+                    onChange={handleInputChange}
+                    step="0.1"
+                    min="0"
+                    placeholder="Enter nicotine content in mg"
                     className="w-full px-3 py-2 border border-neutral-600 bg-neutral-700 text-white rounded-md"
                   />
                 </div>
