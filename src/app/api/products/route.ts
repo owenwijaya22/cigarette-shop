@@ -3,21 +3,10 @@ import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
-    const includeInventory = searchParams.get("includeInventory") === "true";
+    // Remove includeInventory parameter or repurpose it
 
     try {
-        let products;
-
-        if (includeInventory) {
-            products = await prisma.product.findMany({
-                include: {
-                    inventory: true,
-                },
-            });
-        } else {
-            products = await prisma.product.findMany();
-        }
-
+        const products = await prisma.product.findMany();
         return NextResponse.json(products);
     } catch (error) {
         console.error("Error fetching products:", error);
@@ -32,7 +21,7 @@ export async function POST(request: Request) {
     try {
         const data = await request.json();
 
-        // Create the product
+        // Create the product with quantity directly
         const product = await prisma.product.create({
             data: {
                 name: data.name,
@@ -40,15 +29,7 @@ export async function POST(request: Request) {
                 description: data.description,
                 price: data.price,
                 imageUrl: data.imageUrl,
-                // Create inventory at the same time
-                inventory: {
-                    create: {
-                        quantity: data.quantity || 0,
-                    },
-                },
-            },
-            include: {
-                inventory: true,
+                quantity: data.quantity || 0,
             },
         });
 
