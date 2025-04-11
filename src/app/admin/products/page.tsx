@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ImageUploader from '@/components/ImageUploader';
 
+// Update the Product type definition
 type Product = {
   id: string;
   name: string;
@@ -11,19 +12,15 @@ type Product = {
   description: string;
   price: number;
   imageUrl: string;
+  quantity: number; // Add this instead of inventory
   tarContent?: number | null;
   nicotineContent?: number | null;
   type?: string | null;
 };
 
-type Inventory = {
-  id: string;
-  productId: string;
-  quantity: number;
-};
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState<(Product & { inventory?: Inventory })[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -42,7 +39,7 @@ export default function AdminProductsPage() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const response = await fetch('/api/products?includeInventory=true');
+        const response = await fetch('/api/products');
         if (response.ok) {
           const data = await response.json();
           setProducts(data);
@@ -110,27 +107,28 @@ export default function AdminProductsPage() {
     }
   };
 
-  const updateInventory = async (productId: string, quantity: number) => {
+  // Update updateInventory to updateQuantity
+  const updateQuantity = async (productId: string, quantity: number) => {
     try {
-      const response = await fetch('/api/admin/inventory', {
+      const response = await fetch('/api/admin/quantity', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, quantity })
       });
   
       if (response.ok) {
-        const updatedInventory = await response.json();
+        const updatedProduct = await response.json();
         setProducts(prev => 
           prev.map(product => 
             product.id === productId 
-              ? { ...product, inventory: updatedInventory } 
+              ? { ...product, quantity: updatedProduct.quantity } 
               : product
           )
         );
-        setMessage({ text: 'Inventory updated successfully!', type: 'success' });
+        setMessage({ text: 'Quantity updated successfully!', type: 'success' });
       } else {
         const error = await response.json();
-        setMessage({ text: error.message || 'Failed to update inventory', type: 'error' });
+        setMessage({ text: error.message || 'Failed to update quantity', type: 'error' });
       }
     } catch {
       setMessage({ text: 'An error occurred', type: 'error' });
@@ -197,21 +195,21 @@ export default function AdminProductsPage() {
                             type="number"
                             min="0"
                             className="w-20 px-2 py-1 bg-neutral-700 border border-neutral-600 rounded"
-                            value={product.inventory?.quantity || 0}
+                            value={product.quantity} // Update this
                             onChange={(e) => {
                               // Update the value locally for immediate feedback
                               const newValue = parseInt(e.target.value) || 0;
                               setProducts(prev => 
                                 prev.map(p => 
                                   p.id === product.id 
-                                    ? { ...p, inventory: { ...p.inventory, quantity: newValue } as Inventory } 
+                                    ? { ...p, quantity: newValue } 
                                     : p
                                 )
                               );
                             }}
                             onBlur={(e) => {
                               const newValue = parseInt(e.target.value) || 0;
-                              updateInventory(product.id, newValue);
+                              updateQuantity(product.id, newValue);
                             }}
                           />
                         </td>
